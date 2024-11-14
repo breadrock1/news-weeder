@@ -1,0 +1,124 @@
+definitions:
+  http.BadRequestForm:
+    properties:
+      message:
+        example: Bad Request message
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  http.ResponseForm:
+    properties:
+      message:
+        example: Done
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  http.ServerErrorForm:
+    properties:
+      message:
+        example: Server Error message
+        type: string
+      status:
+        example: 503
+        type: integer
+    type: object
+  weeder.Document:
+    properties:
+      content:
+        type: string
+      embedding:
+        items:
+          type: number
+        type: array
+      id:
+        type: string
+      score:
+        type: number
+      timestamp:
+        type: string
+      title:
+        type: string
+    type: object
+  weeder.SearchParams:
+    properties:
+      days_offset:
+        type: integer
+      limit:
+        type: integer
+      vector:
+        items:
+          type: number
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /weeder/search:
+    post:
+      consumes:
+      - application/json
+      description: Search similar news articles by semantic
+      operationId: search
+      parameters:
+      - description: Embeddings to search similar news
+        in: body
+        name: jsonQuery
+        required: true
+        schema:
+          $ref: '#/definitions/weeder.SearchParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            items:
+              $ref: '#/definitions/weeder.Document'
+            type: array
+        "400":
+          description: Bad Request message
+          schema:
+            $ref: '#/definitions/http.BadRequestForm'
+        "503":
+          description: Server does not available
+          schema:
+            $ref: '#/definitions/http.ServerErrorForm'
+      summary: Search similar news
+      tags:
+      - search
+  /weeder/store:
+    put:
+      consumes:
+      - application/json
+      description: Store document to storage for similar searching
+      operationId: store
+      parameters:
+      - description: Document data to store
+        in: body
+        name: jsonQuery
+        required: true
+        schema:
+          $ref: '#/definitions/weeder.Document'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ok
+          schema:
+            $ref: '#/definitions/http.ResponseForm'
+        "400":
+          description: Bad Request message
+          schema:
+            $ref: '#/definitions/http.BadRequestForm'
+        "503":
+          description: Server does not available
+          schema:
+            $ref: '#/definitions/http.ServerErrorForm'
+      summary: Store document to storage
+      tags:
+      - store
+swagger: "2.0"

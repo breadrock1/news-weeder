@@ -1,0 +1,9 @@
+[server]
+Address = "0.0.0.0:2866"
+LoggerLevel = "INFO"
+
+[redis]
+Address = "redis:6379"
+Index = "news-vec-index"
+KNN = 5
+DIM = 768
