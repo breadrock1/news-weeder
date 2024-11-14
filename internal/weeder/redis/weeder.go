@@ -58,7 +58,7 @@ func (rs *KNNSearch) Delete(docId string) error {
 
 func (rs *KNNSearch) Append(doc *weeder.Document) error {
 	key := fmt.Sprintf("doc:%s", doc.ID)
-	hashData := rueidis.VectorString32(doc.Embedding)
+	hashData := rueidis.VectorString64(doc.Embedding)
 
 	setQuery := []interface{}{
 		"title", doc.Title,
@@ -83,7 +83,7 @@ func (rs *KNNSearch) Search(params *weeder.SearchParams) ([]*weeder.Document, er
 	knn := fmt.Sprintf("%s=>[KNN %d @embedding $vec AS score]", filter, rs.config.KNN)
 
 	index := rs.config.Index
-	embed := rueidis.VectorString32(params.Vector)
+	embed := rueidis.VectorString64(params.Vector)
 
 	searchQuery := []interface{}{
 		"FT.SEARCH", index,
@@ -121,16 +121,26 @@ func (rs *KNNSearch) extractSearchResult(foundResult interface{}) ([]*weeder.Doc
 
 		attrs := item["extra_attributes"].(map[interface{}]interface{})
 		title := attrs["title"].(string)
+
 		score := attrs["score"].(string)
 		floatObj, err := strconv.ParseFloat(score, 32)
 		if err != nil {
 			return nil, err
 		}
 
+		var articleTimestamp int64
+		timestamp := attrs["timestamp"].(string)
+		articleTimestamp, err = strconv.ParseInt(timestamp, 10, 64)
+		if err != nil {
+			articleTimestamp = time.Now().Unix()
+		}
+		timeVal := time.Unix(articleTimestamp, 0)
+
 		foundDoc := &weeder.Document{
-			ID:    id,
-			Title: title,
-			Score: float32(floatObj),
+			ID:        id,
+			Title:     title,
+			Timestamp: timeVal,
+			Score:     float32(floatObj),
 		}
 
 		foundedDocs[ind] = foundDoc

@@ -8,7 +8,7 @@ type Document struct {
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
 	Timestamp time.Time `json:"timestamp"`
-	Embedding []float32 `json:"embedding"`
+	Embedding []float64 `json:"embedding"`
 	Score     float32   `json:"score"`
 }
 
@@ -16,5 +16,5 @@ type Document struct {
 type SearchParams struct {
 	Limit      int       `json:"limit"`
 	DaysOffset int       `json:"days_offset"`
-	Vector     []float32 `json:"vector"`
+	Vector     []float64 `json:"vector"`
 }
