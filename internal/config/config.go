@@ -74,7 +74,7 @@ func LoadEnv(enableDotenv bool) (*Config, error) {
 func loadString(envName string) string {
 	value, exists := os.LookupEnv(envName)
 	if !exists {
-		msg := fmt.Sprintf("faile to extract %s env var: %s", envName, value)
+		msg := fmt.Sprintf("failed to extract %s env var: %s", envName, value)
 		log.Println(msg)
 		return ""
 	}
@@ -84,14 +84,14 @@ func loadString(envName string) string {
 func loadNumber(envName string, bitSize int) int {
 	value, exists := os.LookupEnv(envName)
 	if !exists {
-		msg := fmt.Sprintf("faile to extract %s env var: %s", envName, value)
+		msg := fmt.Sprintf("failed to extract %s env var: %s", envName, value)
 		log.Println(msg)
 		return 0
 	}
 
-	number, err := strconv.ParseInt(value, 10, bitSize)
+	number, err := strconv.ParseUint(value, 10, bitSize)
 	if err != nil {
-		msg := fmt.Sprintf("faile to convert %s env var: %s", envName, value)
+		msg := fmt.Sprintf("failed to convert %s env var: %s", envName, value)
 		log.Println(msg)
 		return 0
 	}
