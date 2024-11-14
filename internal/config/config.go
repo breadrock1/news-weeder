@@ -89,7 +89,7 @@ func loadNumber(envName string, bitSize int) int {
 		return 0
 	}
 
-	number, err := strconv.ParseUint(value, 10, bitSize)
+	number, err := strconv.Atoi(value)
 	if err != nil {
 		msg := fmt.Sprintf("failed to convert %s env var: %s", envName, value)
 		log.Println(msg)
