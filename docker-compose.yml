@@ -8,4 +8,4 @@ services:
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
     volumes:
-      - './redis_data:/data'
+      - './redis-data:/data'
