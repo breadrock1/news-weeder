@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-weeder-deploy
+  namespace: yastreb
+spec:
+  selector:
+    matchLabels:
+      app: news-weeder
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: news-weeder
+    spec:
+      containers:
+        - name: news-weeder
+          image:  localhost:5000/local/news-weeder:latest
+          env:
+            - name: NEWS_WEEDER_SERVER_ADDRESS
+              value: "0.0.0.0:2866"
+            - name: NEWS_WEEDER_SERVER_LOGGER_LEVEL
+              value: "INFO"
+            - name: NEWS_WEEDER_REDIS_ADDRESS
+              value: "redis-service:6379"
+            - name: NEWS_WEEDER_REDIS_INDEX
+              value: "news-vec-index"
+            - name: NEWS_WEEDER_REDIS_KNN
+              value: "5"
+            - name: NEWS_WEEDER_REDIS_DIM
+              value: "768"
+          ports:
+            - name: api-and-console
+              containerPort: 2866
