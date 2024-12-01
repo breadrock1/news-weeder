@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deploy
+  namespace: yastreb
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image:  redis/redis-stack-server:latest
+          ports:
+            - name: api-and-console
+              containerPort: 6379
+          volumeMounts:
+            - name: redis-vol
+              mountPath: "/data"
+      volumes:
+        - name: redis-vol
+          persistentVolumeClaim:
+            claimName: redis-pvc
